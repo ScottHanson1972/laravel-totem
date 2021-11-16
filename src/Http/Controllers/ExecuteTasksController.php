@@ -4,6 +4,7 @@ namespace Studio\Totem\Http\Controllers;
 
 use Studio\Totem\Contracts\TaskInterface;
 use Studio\Totem\Task;
+use Studio\Totem\Jobs\ExecuteTask;
 
 class ExecuteTasksController extends Controller
 {
@@ -28,7 +29,8 @@ class ExecuteTasksController extends Controller
      */
     public function index($task)
     {
-        $this->tasks->execute($task);
+        $queueTask = new ExecuteTask($task);
+        dispatch($queueTask);
 
         return Task::find($task->id);
     }
